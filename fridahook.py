@@ -7,6 +7,8 @@ import json
 import os
 
 ADB_PATH = "platform-tools\\adb.exe"
+if not os.path.isfile(ADB_PATH):
+    ADB_PATH = "adb.exe"
 
 with open("config/config.json") as f:
     config = json.load(f)
@@ -70,8 +72,7 @@ def main():
             s = f.read()
         vision_script = session.create_script(s)
         vision_script.load()
-    print("[!] Ctrl+D on UNIX, Ctrl+Z on Windows/cmd.exe to detach from instrumented program.")
-    sys.stdin.read()
+    input("Press enter to exit...")
     session.detach()
 
 if __name__ == '__main__':

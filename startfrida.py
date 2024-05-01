@@ -22,6 +22,8 @@ if os.path.isfile("C:\\ProgramData\\BlueStacks_nxt\\bluestacks.conf"):
 server_port = config["server"]["port"]
 default_ports = [16384, 7555, 5555]
 ADB_PATH = "platform-tools\\adb.exe"
+if not os.path.isfile(ADB_PATH):
+    ADB_PATH = "adb.exe"
 
 def get_device():
     devices = client.devices()
@@ -65,6 +67,7 @@ os.system(f'"{ADB_PATH}" wait-for-device')
 print("\nRunning frida\nNow you can start fridahook\n")
 os.system(f'"{ADB_PATH}" reverse tcp:{server_port} tcp:{server_port}')
 if config["server"]["useSu"]:
-    os.system(f'"{ADB_PATH}"' + " shell su -c /data/local/tmp/frida-server")
+    os.system(f'"{ADB_PATH}"' + " shell -x su -c /data/local/tmp/frida-server -D")
 else:
-    os.system(f'"{ADB_PATH}"' + " shell /data/local/tmp/frida-server")
+    os.system(f'"{ADB_PATH}"' + " shell -x /data/local/tmp/frida-server -D")
+input("Press enter to exit...")
