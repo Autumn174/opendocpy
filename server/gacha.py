@@ -349,9 +349,6 @@ def doWishes(num, poolId):
             rankUpperLimit[5] = (numWish - 48)*rankProb[5]
         for j in range(4, 1, -1):
             rankUpperLimit[j] = rankUpperLimit[j+1]+rankProb[j]
-        if pool_is_limited and numTotal == 299:
-            paused_numWish = numWish
-            paused_numWishUp = numWishUp
         if (pool_is_linkage and numWishUp == 119) or (pool_is_boot and numWish == 9 and numTotal == 9):
             rankUpperLimit[5] = 1
         if (not pool_is_boot and first5Star == 9) or (pool_is_boot and first5Star == 19):
@@ -393,10 +390,6 @@ def doWishes(num, poolId):
             char_id = random.choice(rankChars[rank])
             if numWishUp != -1:
                 numWishUp += 1
-        if pool_is_limited and numTotal == 300:
-            char_id = pool["detailInfo"]["limitedChar"][0]
-            numWish = paused_numWish
-            numWishUp = paused_numWishUp
         chars.append(
             {
                 "charId": char_id,
@@ -438,7 +431,6 @@ def doWishes(num, poolId):
             gacha_data["limit"] = {
                 poolId: {
                     "poolCnt": numTotal,
-                    "recruitedFreeChar": numTotal >= 300,
                     "leastFree": 0
                 }
             }
@@ -567,3 +559,60 @@ def getPoolDetail():
     poolId = request_json["poolId"]
     pool = doGetPool(poolId)
     return pool
+
+
+def getFreeChar():
+    request_json = request.json
+    poolId = request_json["poolId"]
+    pool = doGetPool(poolId)
+    if pool["detailInfo"]["limitedChar"]:
+        char_id = pool["detailInfo"]["limitedChar"][0]
+    else:
+        gacha = read_json(GACHA_JSON_PATH)
+        char_id = gacha["advanced"][0]["charId"]
+    char_inst_id = int(char_id.split('_')[1])
+    return {
+        "items": [
+            {
+                "type": "CHAR",
+                "id": char_id,
+                "count": 1,
+                "charGet": {
+                    "charInstId": char_inst_id,
+                    "charId": char_id,
+                    "isNew": 1,
+                    "itemGet": [
+                        {
+                            "type": "HGG_SHD",
+                            "id": "4004",
+                            "count": 999
+
+                        },
+                        {
+                            "type": "LGG_SHD",
+                            "id": "4005",
+                            "count": 999
+                        },
+                        {
+                            "type": "MATERIAL",
+                            "id": f"p_{char_id}",
+                            "count": 999
+                        }
+                    ],
+                    "logInfo": {}
+                }
+            }
+        ],
+        "playerDataDelta": {
+            "modified": {
+                "gacha": {
+                    "limit": {
+                        poolId: {
+                            "recruitedFreeChar": True
+                        }
+                    }
+                }
+            },
+            "deleted": {}
+        }
+    }

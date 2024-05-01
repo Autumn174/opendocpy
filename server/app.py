@@ -215,6 +215,8 @@ app.add_url_rule('/gacha/tenAdvancedGacha', methods=['POST'], view_func=gacha.te
 
 app.add_url_rule('/gacha/getPoolDetail', methods=['POST'], view_func=gacha.getPoolDetail)
 
+app.add_url_rule('/gacha/getFreeChar', methods=['POST'], view_func=gacha.getFreeChar)
+
 app.add_url_rule(
     '/user/auth/v1/token_by_phone_password',
     methods=['POST'], view_func=user.auth_v1_token_by_phone_password
