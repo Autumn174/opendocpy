@@ -27,6 +27,13 @@ Discord: [https://discord.com/invite/SmuB88RR5W](https://discord.com/invite/SmuB
 5. Run `start_frida-server.bat`, and the window should stay open if no error occurs.
 6. Run `start_frida-hook.bat`. It should automatically open up the game. The window should stay open if no error occurs.
 
+#### Experimental
+
+1. Enable root permission in MuMu Player's settings (adb connection should be enabled by default, therefore no need to enable it manually).
+2. Start MuMu Player 12.
+3. Run `setup_requirements.bat`, and success can be indicated from `"Press enter to exit..."`. This step is a one-time requirement. After fulfilling the prerequisites, proceed to the subsequent steps.
+4. Run `one_click_run.bat`. If no errors occur, three windows should remain open.
+
 ### LDPlayer9
 
 [https://ldcdn.ldmnq.com/download/package/LDPlayer9.0.exe](https://ldcdn.ldmnq.com/download/package/LDPlayer9.0.exe)
