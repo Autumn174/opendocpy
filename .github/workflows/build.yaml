@@ -19,7 +19,7 @@ jobs:
       - run: pyinstaller odpy.spec
       - run: move config/, data/, data-global/, mods/, *.js, game.txt, mumu.txt, README.md, syncData.json dist/odpy/
       - run: python update_cache.py
-      - run: move adb.zip, frida-server-*.xz, aria2c.exe bat-for-exe/run.cmd dist/odpy/ -ErrorAction SilentlyContinue
+      - run: move adb.zip, frida-server-*.xz, aria2c.exe, bat-for-exe/run.cmd dist/odpy/ -ErrorAction SilentlyContinue
       - uses: actions/upload-artifact@v3
         with:
           name: windows
