@@ -6,6 +6,8 @@ import json
 
 import os
 
+import time
+
 ADB_PATH = "platform-tools\\adb.exe"
 if not os.path.isfile(ADB_PATH):
     ADB_PATH = "adb.exe"
@@ -28,24 +30,28 @@ def on_message(message, data):
     print("[%s] => %s" % (message, data))
 
 def main():
-    device = frida.get_usb_device(timeout=1)
+    for i in range(30):
+        try:
+            device = frida.get_usb_device(timeout=1)
+            if GADGET:
+                os.system(f'"{ADB_PATH}" reverse tcp:{PORT} tcp:{PORT}')
+                session = device.attach("Gadget")
 
-    if GADGET:
-        os.system(f'"{ADB_PATH}" reverse tcp:{PORT} tcp:{PORT}')
-        session = device.attach("Gadget")
+            elif MODE == "cn":
+                pid = device.spawn(
+                    b64decode('Y29tLmh5cGVyZ3J5cGguYXJrbmlnaHRz').decode())
+                device.resume(pid)
+                session = device.attach(pid)
 
-    elif MODE == "cn":
-        pid = device.spawn(
-            b64decode('Y29tLmh5cGVyZ3J5cGguYXJrbmlnaHRz').decode())
-        device.resume(pid)
-        session = device.attach(pid)
-
-    elif MODE == "global":
-        pid = device.spawn(
-            b64decode('Y29tLllvU3RhckVOLkFya25pZ2h0cw==').decode())
-        device.resume(pid)
-        session = device.attach(pid, realm="emulated")
-        java_session = device.attach(pid)
+            elif MODE == "global":
+                pid = device.spawn(
+                    b64decode('Y29tLllvU3RhckVOLkFya25pZ2h0cw==').decode())
+                device.resume(pid)
+                session = device.attach(pid, realm="emulated")
+                java_session = device.attach(pid)
+            break
+        except Exception:
+            time.sleep(1.0)
 
     with open("_.js", encoding="utf-8") as f:
         s = f.read()
